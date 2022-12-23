@@ -110,7 +110,7 @@ async function getCSSRules(
 
   // First loop inlines imports
   styleSheets.forEach((sheet) => {
-    if ('cssRules' in sheet) {
+     if (sheet.hasOwnProperty('cssRules'))  {
       try {
         toArray<CSSRule>(sheet.cssRules || []).forEach((item, index) => {
           if (item.type === CSSRule.IMPORT_RULE) {
@@ -167,7 +167,7 @@ async function getCSSRules(
   return Promise.all(deferreds).then(() => {
     // Second loop parses rules
     styleSheets.forEach((sheet) => {
-      if ('cssRules' in sheet) {
+      if (sheet.hasOwnProperty('cssRules'))  {
         try {
           toArray<CSSStyleRule>(sheet.cssRules || []).forEach((item) => {
             ret.push(item)
