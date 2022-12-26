@@ -110,7 +110,7 @@ async function getCSSRules(
 
   // First loop inlines imports
   styleSheets.forEach((sheet) => {
-     if (sheet.hasOwnProperty('cssRules'))  {
+    if ('cssRules' in sheet) {
       try {
         toArray<CSSRule>(sheet.cssRules || []).forEach((item, index) => {
           if (item.type === CSSRule.IMPORT_RULE) {
@@ -128,15 +128,16 @@ async function getCSSRules(
                         : sheet.cssRules.length,
                     )
                   } catch (error) {
+                    /**
                     console.error('Error inserting rule from remote css', {
                       rule,
                       error,
-                    })
+                    }) * */
                   }
                 }),
               )
-              .catch((e) => {
-                console.error('Error loading remote css', e.toString())
+              .catch(() => {
+                // console.error('Error loading remote css', e.toString())
               })
 
             deferreds.push(deferred)
@@ -154,12 +155,12 @@ async function getCSSRules(
                   inline.insertRule(rule, sheet.cssRules.length)
                 }),
               )
-              .catch((err) => {
-                console.error('Error loading remote stylesheet', err.toString())
+              .catch(() => {
+                // console.error('Error loading remote stylesheet', err.toString())
               }),
           )
         }
-        console.error('Error inlining remote css file', e.toString())
+        // console.error('Error inlining remote css file', e.toString())
       }
     }
   })
@@ -167,16 +168,17 @@ async function getCSSRules(
   return Promise.all(deferreds).then(() => {
     // Second loop parses rules
     styleSheets.forEach((sheet) => {
-      if (sheet.hasOwnProperty('cssRules'))  {
+      if ('cssRules' in sheet) {
         try {
           toArray<CSSStyleRule>(sheet.cssRules || []).forEach((item) => {
             ret.push(item)
           })
         } catch (e) {
+          /**
           console.error(
             `Error while reading CSS rules from ${sheet.href}`,
             e.toString(),
-          )
+          ) * */
         }
       }
     })
